@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+        <script>
+            class Api {
+                getData(url) {
+                    return new Promise(async (resolve, reject) => {
+                        try {
+                            const response = await axios.get(url);
+                            resolve(response);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+                }
+            }
+
+            class Dog extends Api {
+                constructor() {
+                    super();
+
+                    this.loading = false;
+                    this.data = null;
+                    this.error = null;
+                }
+
+                async getDogData() {
+                    try {
+                        const dog = await this.getData(
+                            "https://dog.ceo/api/breeds/image/random"
+                        );
+                        console.log("dog: ", dog.data);
+                        this.data = dog.data;
+                    } catch (error) {
+                        console.log("error: ", error.response.data);
+                        this.error = error.response.data;
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+
+            const dog = new Dog();
+            dog.getDogData();
+        </script>
+    </body>
+</html>
