@@ -1,3 +1,3 @@
 # my-asynchronous-dogs-2020
 
-Dog API: https://dog.ceo/
+> Use sample data - Dog API: https://dog.ceo/

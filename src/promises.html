@@ -23,22 +23,81 @@
                 }
             }
 
+            class AllDogsAndSingleDog extends Api {
+                constructor() {
+                    super();
+
+                    this.loading = false;
+                    this.dogs = null;
+                    this.dog = null;
+                    this.error = null;
+                }
+
+                getAllDogsAndSingleDogData() {
+                    this.loading = true;
+
+                    return this.getData("https://dog.ceo/api/breeds/list/all")
+                        .then(dogs => {
+                            this.dogs = dogs.data;
+
+                            if (dogs && dogs.status === 200) {
+                                return Promise.resolve(dogs);
+                            }
+
+                            return Promise.reject({
+                                response: {
+                                    data: "Damn it"
+                                }
+                            });
+                        })
+                        .then(dogs => {
+                            console.log("dogs: ", dogs.data.message);
+
+                            const [affenpinscher] = Object.keys(
+                                dogs.data.message
+                            );
+
+                            const dog = this.getData(
+                                `https://dog.ceo/api/breed/${affenpinscher}/images/random`
+                            );
+
+                            return dog;
+                        })
+                        .then(dog => {
+                            console.log("dog: ", dog.data);
+                            this.dog = dog.data;
+                        })
+                        .catch(error => {
+                            console.log("error: ", error.response.data);
+                            this.error = error.response.data;
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                }
+            }
+
+            const allDogsAndSingleDog = new AllDogsAndSingleDog();
+            allDogsAndSingleDog.getAllDogsAndSingleDogData();
+
             class Dog extends Api {
                 constructor() {
                     super();
 
                     this.loading = false;
-                    this.data = null;
+                    this.dog = null;
                     this.error = null;
                 }
 
                 getDogData() {
+                    this.loading = true;
+
                     return this.getData(
                         "https://dog.ceo/api/breeds/image/random"
                     )
                         .then(dog => {
                             console.log("dog: ", dog.data);
-                            this.data = dog.data;
+                            this.dog = dog.data;
                         })
                         .catch(error => {
                             console.log("error: ", error.response.data);

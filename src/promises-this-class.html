@@ -28,7 +28,7 @@
                     super();
 
                     this.loading = false;
-                    this.data = null;
+                    this.dog = null;
                     this.error = null;
                 }
 
@@ -38,7 +38,7 @@
                     )
                         .then(dog => {
                             console.log("dog: ", dog.data);
-                            this.data = dog.data;
+                            this.dog = dog.data;
                         })
                         .catch(error => {
                             console.log("error: ", error.response.data);
@@ -53,17 +53,23 @@
                     return this.getData(
                         "https://dog.ceo/api/breeds/image/random"
                     )
-                        .then(function(dog) {
-                            console.log("dog: ", dog.data);
-                            this.data = dog.data;
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log("error: ", error.response.data);
-                            this.error = error.response.data;
-                        }.bind(this))
-                        .finally(function() {
-                            this.loading = false;
-                        }.bind(this));
+                        .then(
+                            function(dog) {
+                                console.log("dog: ", dog.data);
+                                this.dog = dog.data;
+                            }.bind(this)
+                        )
+                        .catch(
+                            function(error) {
+                                console.log("error: ", error.response.data);
+                                this.error = error.response.data;
+                            }.bind(this)
+                        )
+                        .finally(
+                            function() {
+                                this.loading = false;
+                            }.bind(this)
+                        );
                 }
 
                 getDogDataPreserveThis() {
@@ -74,7 +80,7 @@
                     )
                         .then(function(dog) {
                             console.log("dog: ", dog.data);
-                            that.data = dog.data;
+                            that.dog = dog.data;
                         })
                         .catch(function(error) {
                             console.log("error: ", error.response.data);

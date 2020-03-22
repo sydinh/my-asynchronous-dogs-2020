@@ -21,12 +21,101 @@
                 }
             }
 
+            class AllDogsAndSingleDog extends Api {
+                constructor() {
+                    super();
+
+                    this.loading = false;
+                    this.dogs = null;
+                    this.dog = null;
+                    this.error = null;
+                }
+
+                async getAllDogsAndSingleDogData() {
+                    this.loading = true;
+
+                    try {
+                        const dogs = await this.getData(
+                            "https://dog.ceo/api/breeds/list/all"
+                        );
+
+                        console.log("dogs.data: ", dogs.data);
+
+                        this.dogs = dogs.data;
+
+                        // Break a try - catch in JavaScript with throwing an exception
+                        if (dogs && dogs.status !== 200) {
+                            const exception = {
+                                response: {
+                                    data: "Haiza"
+                                }
+                            };
+
+                            throw exception;
+                        }
+
+                        const [affenpinscher] = Object.keys(dogs.data.message);
+                        const dog = await this.getData(
+                            `https://dog.ceo/api/breed/${affenpinscher}/images/random`
+                        );
+
+                        console.log("dog.data: ", dog.data);
+
+                        this.dog = dog.data;
+                    } catch (error) {
+                        console.log("error: ", error.response.data);
+
+                        this.error = error.response.data;
+                    } finally {
+                        console.log("finally");
+                        this.loading = false;
+                    }
+                }
+
+                async getAllDogsAndSingleDogDataBreak() {
+                    executor: try {
+                        const dogs = await this.getData(
+                            "https://dog.ceo/api/breeds/list/all"
+                        );
+
+                        console.log("dogs.data: ", dogs.data);
+
+                        this.dogs = dogs.data;
+
+                        // Break a try - catch in JavaScript without throwing an exception
+                        // using break keyword and JavaScript label
+                        if (dogs && dogs.status !== 200) {
+                            break executor;
+                        }
+
+                        const [affenpinscher] = Object.keys(dogs.data.message);
+                        const dog = await this.getData(
+                            `https://dog.ceo/api/breed/${affenpinscher}/images/random`
+                        );
+
+                        console.log("dog.data: ", dog.data);
+
+                        this.dog = dog.data;
+                    } catch (error) {
+                        console.log("error: ", error.response.data);
+
+                        this.error = error.response.data;
+                    } finally {
+                        console.log("finally");
+                        this.loading = false;
+                    }
+                }
+            }
+
+            const allDogsAndSingleDog = new AllDogsAndSingleDog();
+            allDogsAndSingleDog.getAllDogsAndSingleDogData();
+
             class Dog extends Api {
                 constructor() {
                     super();
 
                     this.loading = false;
-                    this.data = null;
+                    this.dog = null;
                     this.error = null;
                 }
 
@@ -36,7 +125,7 @@
                             "https://dog.ceo/api/breeds/image/random"
                         );
                         console.log("dog: ", dog.data);
-                        this.data = dog.data;
+                        this.dog = dog.data;
                     } catch (error) {
                         console.log("error: ", error.response.data);
                         this.error = error.response.data;
